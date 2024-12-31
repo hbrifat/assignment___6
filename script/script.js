@@ -49,12 +49,23 @@ const removeActiveClass = () => {
   }
 };
 
+
+const loadSpinner = () => {
+  const spinnerSection = document.getElementById("spinner-section");
+  spinnerSection.classList.remove('hidden');
+
+  setTimeout(() => {
+    spinnerSection.classList.add('hidden');
+  }, 5000);
+}
+
 const loadAllPets = () => {
-  fetch("https://openapi.programming-hero.com/api/peddy/pets")
+    fetch("https://openapi.programming-hero.com/api/peddy/pets")
     .then((res) => res.json())
     .then((data) => displayAllPets(data.pets))
     .catch((error) => console.log(error));
 };
+
 
 const displayAllPets = (pets) => {
   // console.log(pets)
@@ -97,13 +108,13 @@ const displayAllPets = (pets) => {
                     <div class="divider"></div>
   
                     <div class="card-actions justify-around">
-                        <button id="like-btn" class="btn btn-xs sm:btn-sm" onclick=showThumbnail('${
+                        <button id="like-btn" class="btn btn-xs xl:btn-md" onclick=showThumbnail('${
                           element.image
                         }')>
                           <i class="fa-regular fa-thumbs-up"></i>
                         </button>
-                        <button id="adopt-btn" class="btn btn-xs sm:btn-sm">Adopt</button>
-                        <button id="details-btn" class="btn btn-xs sm:btn-sm" onclick=loadPetDetails('${
+                        <button id="adopt-btn" class="btn btn-xs xl:btn-md">Adopt</button>
+                        <button id="details-btn" class="btn btn-xs xl:btn-md" onclick=loadPetDetails('${
                           element.petId
                         }')>Details</button>
                     </div>
@@ -248,4 +259,6 @@ const displayPetDetails = (petData) => {
 // };
 
 loadCategories();
+
 loadAllPets();
+
