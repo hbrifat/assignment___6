@@ -44,10 +44,10 @@ const displayCategories = (categories) => {
 
 const removeActiveClass = () => {
   const btnGroup = document.getElementsByClassName("btn-group");
-  for(let btn of btnGroup) {
+  for (let btn of btnGroup) {
     btn.classList.remove("active");
   }
-}
+};
 
 const loadAllPets = () => {
   fetch("https://openapi.programming-hero.com/api/peddy/pets")
@@ -80,7 +80,7 @@ const displayAllPets = (pets) => {
                   <div class="card-body p-5">
                       <h6 class="card-title">${element.pet_name}</h6>
                       <p><i class="fa-solid fa-table-cells-large"></i>  Breed: ${
-                        element.breed
+                        !element?.breed ? "N/A" : `${element.breed}`
                       }</P>
                       <p><i class="fa-solid fa-calendar-days"></i>  Birth: ${
                         !element?.date_of_birth
@@ -91,17 +91,21 @@ const displayAllPets = (pets) => {
                         !element?.gender ? "N/A" : `${element.gender}`
                       }</P>
                       <p><i class="fa-solid fa-dollar-sign"></i>  Price: ${
-                        element.price
-                      }$</P>
+                        !element?.price ? "N/A" : `${element.price}$`
+                      }</P>
   
                     <div class="divider"></div>
   
-                    <div class="card-actions justify-between">
-                        <button id="like-btn" class="btn btn-xs sm:btn-sm md:btn-md">
+                    <div class="card-actions justify-around">
+                        <button id="like-btn" class="btn btn-xs sm:btn-sm" onclick=showThumbnail('${
+                          element.image
+                        }')>
                           <i class="fa-regular fa-thumbs-up"></i>
                         </button>
-                        <button id="adopt-btn" class="btn btn-xs sm:btn-sm md:btn-md">Adopt</button>
-                        <button id="details-btn" class="btn btn-xs sm:btn-sm md:btn-md">Details</button>
+                        <button id="adopt-btn" class="btn btn-xs sm:btn-sm">Adopt</button>
+                        <button id="details-btn" class="btn btn-xs sm:btn-sm" onclick=loadPetDetails('${
+                          element.petId
+                        }')>Details</button>
                     </div>
                   </div>
           `;
@@ -109,7 +113,16 @@ const displayAllPets = (pets) => {
     });
   } else {
     const div = document.createElement("div");
-    div.classList.add("card", "bg-gray-300", "shadow-sm", "border", "min-h-screen", "text-center", "px-5", "space-y-5");
+    div.classList.add(
+      "card",
+      "bg-gray-300",
+      "shadow-sm",
+      "border",
+      "min-h-screen",
+      "text-center",
+      "px-5",
+      "space-y-5"
+    );
 
     petShowcase.classList.remove("grid");
 
@@ -131,6 +144,18 @@ const displayAllPets = (pets) => {
   }
 };
 
+const showThumbnail = (image) => {
+  const petAside = document.getElementById("pet-aside");
+  // console.log("like btn clicked!!!");
+  // console.log(image);
+  const span = document.createElement("span");
+  span.innerHTML = `
+    <img src=${image} class="rounded-2xl p-2"/>
+  `;
+
+  petAside.appendChild(span);
+};
+
 const getBirthYear = (birth) => {
   let date = new Date(birth);
   let year = date.getFullYear();
@@ -142,6 +167,70 @@ const loadPetsByCategory = (category) => {
     .then((res) => res.json())
     .then((data) => displayAllPets(data.data))
     .catch((error) => console.log(error));
+};
+
+const loadPetDetails = (petId) => {
+  fetch(`https://openapi.programming-hero.com/api/peddy/pet/${petId}`)
+    .then((res) => res.json())
+    .then((data) => displayPetDetails(data.petData))
+    .catch((error) => console.log(error));
+};
+
+const displayPetDetails = (petData) => {
+  // console.log(petData);
+  const petDetailsModal = document.getElementById("petDetailsModal");
+
+  petDetailsModal.showModal();
+
+  petDetailsModal.innerHTML = `
+    <div class="modal-box w-11/12 md:max-w-2xl">
+                  <figure class="p-1">
+                          <img
+                          src=${petData.image}
+                          alt="pets"
+                          class="rounded-xl w-full" 
+                          />
+                  </figure>
+                  <div class="card-body p-1 mb-2">
+                      <h6 class="card-title md:3xl">${petData.pet_name}</h6>
+                      
+                      <div class="grid grid-cols-2 gap-1">
+                        <p><i class="fa-solid fa-table-cells-large"></i>  Breed: ${
+                          !petData?.breed ? "N/A" : `${petData.breed}`
+                        }</P>
+                        <p><i class="fa-solid fa-venus-mars"></i>  Gender: ${
+                          !petData?.gender ? "N/A" : `${petData.gender}`
+                        }</P>
+                        <p><i class="fa-solid fa-venus-mars"></i> Vaccinated Status: ${
+                          !petData?.vaccinated_status
+                            ? "N/A"
+                            : `${petData.vaccinated_status}`
+                        }</P>
+                        <p><i class="fa-solid fa-calendar-days"></i>  Birth: ${
+                          !petData?.date_of_birth
+                            ? "N/A"
+                            : `${getBirthYear(petData.date_of_birth)}`
+                        }</P>
+                        <p><i class="fa-solid fa-dollar-sign"></i>  Price: ${
+                          !petData?.price ? "N/A" : `${petData.price}$`
+                        }</P>
+                      </div>
+  
+                    <div class="divider"></div>
+
+                    <div class="space-y-2">
+                        <h5 class="font-semibold text-lg">Details Information</h5>
+                        <p>${!petData?.pet_details ? "N/A" : `${petData.pet_details}`}</p>
+                    </div>
+                  </div>
+
+        <form method="dialog">
+          <button class="btn btn-block">Cancel</button>
+        </form>
+
+    </div>
+    
+    `;
 };
 
 // const myObj = {
@@ -157,9 +246,6 @@ const loadPetsByCategory = (category) => {
 //   vaccinated_status: "Fully",
 //   pet_name: "Sunny",
 // };
-
-
-
 
 loadCategories();
 loadAllPets();
