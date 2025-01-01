@@ -50,19 +50,24 @@ const removeActiveClass = () => {
 };
 
 
-const loadSpinner = () => {
+const loadSpinner = (returnedObject) => {
+  const petShowcase = document.getElementById("pet-showcase");
+  petShowcase.innerHTML = "";
+
   const spinnerSection = document.getElementById("spinner-section");
   spinnerSection.classList.remove('hidden');
 
   setTimeout(() => {
     spinnerSection.classList.add('hidden');
-  }, 5000);
+    displayAllPets(returnedObject);
+  }, 2000);
 }
 
 const loadAllPets = () => {
     fetch("https://openapi.programming-hero.com/api/peddy/pets")
     .then((res) => res.json())
-    .then((data) => displayAllPets(data.pets))
+    // .then((data) => displayAllPets(data.pets))
+    .then((data) => loadSpinner(data.pets))
     .catch((error) => console.log(error));
 };
 
@@ -176,7 +181,8 @@ const getBirthYear = (birth) => {
 const loadPetsByCategory = (category) => {
   fetch(`https://openapi.programming-hero.com/api/peddy/category/${category}`)
     .then((res) => res.json())
-    .then((data) => displayAllPets(data.data))
+    // .then((data) => displayAllPets(data.data))
+    .then((data) => loadSpinner(data.data))
     .catch((error) => console.log(error));
 };
 
