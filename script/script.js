@@ -123,13 +123,13 @@ const displayAllPets = (pets) => {
                     <div class="divider"></div>
   
                     <div class="card-actions justify-around">
-                        <button id="like-btn" class="btn btn-xs xl:btn-md" onclick=showThumbnail('${
+                        <button class="btn btn-xs xl:btn-md" onclick=showThumbnail('${
                           element.image
                         }')>
                           <i class="fa-regular fa-thumbs-up"></i>
                         </button>
-                        <button id="adopt-btn" class="btn btn-xs xl:btn-md">Adopt</button>
-                        <button id="details-btn" class="btn btn-xs xl:btn-md" onclick=loadPetDetails('${
+                        <button id="adopt-btn-${element.petId}" class="btn btn-xs xl:btn-md" onclick=showCountdown(this.id)>Adopt</button>
+                        <button class="btn btn-xs xl:btn-md" onclick=loadPetDetails('${
                           element.petId
                         }')>Details</button>
                     </div>
@@ -169,6 +169,45 @@ const displayAllPets = (pets) => {
     petShowcase.append(div);
   }
 };
+
+
+const showCountdown = (buttonID) => {
+  console.log("Adopt button clicked", buttonID);
+
+  const myModal = document.getElementById("myModal");
+  myModal.show();
+
+  myModal.innerHTML = `
+  <div class="modal-box max-w-md">
+    <div class="card-body p-0.5 md:p-1 mb-2 items-center space-y-1 md:space-y-3">
+        <figure class="p-1">
+           <i class="fa-solid fa-handshake text-2xl md:text-4xl"></i>
+        </figure>
+        <h6 class="card-title text-xl md:text-4xl">Congrats!</h6>
+        <p class="text-sm md:text-lg"> Adoption process is Start for your pet! </p>
+        <span class="countdown font-mono text-2xl md:text-4xl">
+          <span id="counterElement" style="--value: 3;"></span>
+        </span>
+    </div>
+  </div>
+  `;
+
+  // countdown using js
+  let counter = 3;
+  setInterval(() => {
+      if(counter >= 1) {
+        counter--;
+      }
+      document.getElementById("counterElement").style.setProperty('--value', counter);
+  }, 1000)
+
+  setTimeout(() => {
+    myModal.close();
+    document.getElementById(buttonID).innerText = "Adopted";
+    document.getElementById(buttonID).setAttribute("disabled", true);
+  }, 3000);
+
+}
 
 const showThumbnail = (image) => {
   const petAside = document.getElementById("pet-aside");
@@ -210,7 +249,7 @@ const loadPetDetails = (petId) => {
 
 const displayPetDetails = (petData) => {
   // console.log(petData);
-  const petDetailsModal = document.getElementById("petDetailsModal");
+  const petDetailsModal = document.getElementById("myModal");
 
   petDetailsModal.showModal();
 
