@@ -6,11 +6,9 @@ const loadCategories = () => {
 };
 
 const displayCategories = (categories) => {
-  // console.log(categories);
   const categoryContainer = document.getElementById("pet-categories");
 
   categories.forEach((element) => {
-    // console.log(element);
 
     const btn = document.createElement("button");
     btn.classList.add(
@@ -66,7 +64,6 @@ const loadSpinner = (returnedObject) => {
 const loadAllPets = () => {
     fetch("https://openapi.programming-hero.com/api/peddy/pets")
     .then((res) => res.json())
-    // .then((data) => displayAllPets(data.pets))
     .then((data) => {
       sortPricing(data.pets);
 
@@ -80,10 +77,6 @@ const loadAllPets = () => {
 
 
 const displayAllPets = (pets) => {
-        // // Sorting
-        // sortPricing(pets);
-
-  // console.log(pets)
   const petShowcase = document.getElementById("pet-showcase");
 
   petShowcase.innerHTML = "";
@@ -92,7 +85,6 @@ const displayAllPets = (pets) => {
     petShowcase.classList.add("grid");
 
     pets.forEach((element) => {
-      // console.log(element);
       const div = document.createElement("div");
       div.classList.add("card", "bg-base", "shadow-sm", "border");
       div.innerHTML = `
@@ -211,8 +203,6 @@ const showCountdown = (buttonID) => {
 
 const showThumbnail = (image) => {
   const petAside = document.getElementById("pet-aside");
-  // console.log("like btn clicked!!!");
-  // console.log(image);
   const span = document.createElement("span");
   span.innerHTML = `
     <img src=${image} class="rounded-2xl p-2"/>
@@ -230,7 +220,6 @@ const getBirthYear = (birth) => {
 const loadPetsByCategory = (category) => {
   fetch(`https://openapi.programming-hero.com/api/peddy/category/${category}`)
     .then((res) => res.json())
-    // .then((data) => displayAllPets(data.data))
     .then((data) => {
       sortPricing(data.data);
 
@@ -248,7 +237,6 @@ const loadPetDetails = (petId) => {
 };
 
 const displayPetDetails = (petData) => {
-  // console.log(petData);
   const petDetailsModal = document.getElementById("myModal");
 
   petDetailsModal.showModal();
@@ -311,7 +299,6 @@ const sortPricing = (returnedValue) => {
         returnedValue.sort(function(a, b){return b.price - a.price});
 
         loadSpinner(returnedValue);
-        // console.log(returnedValue);
   })
 }
 
